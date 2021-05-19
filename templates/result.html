@@ -1,0 +1,84 @@
+{% extends 'inc/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <br>
+    <div class="container">
+        <div class="p-4 r-10 border mb-4 google-box">
+            <h2 class="text-secondary mb-4">
+                Estimated Values
+            </h2>
+
+            <div class="card inputs bg-light-grey r-10">
+                <div class="card-body">
+                    <h5 class="card-title my-0 mk-pointer" data-toggle="collapse" data-target="#to_be_hidden">Inputs</h5>
+                    <div id="to_be_hidden" class="collapse mt-3">
+                        <div class="row px-2">
+                            {% for input in inputs %}
+                                <div class="col-sm-6 pb-3 px-2">
+                                    <div class="card r-10">
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ input.0 }}</h6>
+                                            <h6 class="card-subtitle mb-2 text-muted">{{ input.1 }}</h6>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+    
+                        </div>
+                    </div>
+                        
+                </div>
+            </div>
+
+            {% if user.is_superuser %}
+                <div class="card bg-light-grey r-10 mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Admin outputs</h5>
+                        <div class="row px-2">
+                            {% for param in results.admin %}
+                                <div class="col-sm-3 pb-3 px-2">
+                                    <div class="card r-10">
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ param.label }}</h6>
+                                            <h6 class="card-subtitle mb-2 text-muted">{{ param.L }} {{ param.value }} {{ param.R }}</h6>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                            
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="card bg-light-grey r-10 mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">User outputs</h5>
+                    <div class="row px-2">
+                        {% for param in results.user %}
+                            <div class="col-sm-3 pb-3 px-2">
+                                <div class="card r-10">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ param.label }}</h6>
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ param.L }} {{ param.value }} {{ param.R }}</h6>                                        
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                        
+                </div>
+            </div>
+           
+        </div>
+
+    </div>
+
+
+    
+{% endblock %}
+

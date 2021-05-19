@@ -1,0 +1,96 @@
+{% extends 'inc/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <br>
+    <div class="container">
+        <div class="p-4 r-10 border mb-4 google-box">
+            <h2 class="text-secondary mb-4">
+                Enter values to get better estimation
+            </h2>
+            
+            {% for message in messages %}
+                <div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
+                    {{ message }}        
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+
+            <div class="alert alert-danger text-center alert-dismissible fade show" style="display: none;" id="my-error" role="alert">
+                Entered site name doesn't exists        
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form action="{% url 'get_estimate' %}" method="post" id="main-form" class="border r-10 p-4 bg-light-grey">
+                {% csrf_token %}
+                <div class="row">
+                    {% for field in form %}
+                        <div class="col-sm-6">
+                            {{ field | as_crispy_field }}
+                        </div>
+                    {% endfor %}
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="text-white">
+                                Submit button
+                            </label>
+                            <button type="submit" class="btn btn-block btn-info">SUBMIT</button>
+                        </div>
+                    </div>
+            
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+
+
+    <script>
+        var is_allow = false;
+        $("#id_current_date").attr("type", "date");
+        $("#id_construnction_start_date").attr("type", "date");
+        $("label").css("font-weight", "bold")
+
+        let msg = "{% for message in messages %}{{ message }}{% endfor %}".trim();
+        if (msg.length > 0) {
+            $("#id_site_name").css("border", "solid 1px red");
+        
+        }
+
+
+        $("#id_site_name").on("keyup", function () {
+            let site_name = this.value;
+            $.ajax({
+                url: "{% url 'check_site' %}",
+                type: "GET",
+                data: {
+                    site_name: site_name
+                },
+                success: (response)=>{
+                    if (response.status) {
+                        $("#id_site_name").css("border", "");
+                        $("#my-error").hide();
+                        is_allow = true;
+                    }else{
+                        $("#id_site_name").css("border", "solid 1px red");
+                        $("#my-error").show();
+                        is_allow = false;
+                    }
+                }
+            }) 
+        })
+
+        $("#main-form").submit(function () {
+            return is_allow;            
+        });
+
+
+    </script>
+    
+{% endblock %}
+
